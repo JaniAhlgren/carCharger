@@ -17,10 +17,8 @@ def main():
     value = getJson()._fetch_json(35)
     x=json.loads(value)
     hourlyPrices=getTomorrowsElectricityPrice(x)
-    print(hourlyPrices)
+   
 
-#cl.logWriter(x["data"])
-#print(x["currency"])
 def getTomorrowsElectricityPrice(json, carunaNightTime=["22","23","0","1","2","3","4","5","6"], NGE_Margin=0.16):
     listedPrices=[]
     carunaNightPrice=2.74
@@ -36,14 +34,12 @@ def getTomorrowsElectricityPrice(json, carunaNightTime=["22","23","0","1","2","3
         hourlyPrice=NULL
         if str(startHour) in carunaNightTime:
             totalPrice=float(price)/10+float(NGE_Margin)+float(carunaNightPrice)
-            #print(f"{startTime} : {totalPrice}")
-
-            
+                       
         else:
             totalPrice=float(price)/10+float(NGE_Margin)+float(carunaDayPrice)
-            #print(f"{startTime} : {totalPrice}")
-        hourlyPrice=f"{startTime} : {totalPrice}"
+            hourlyPrice=f"{startTime} : {totalPrice}"
         listedPrices.append(hourlyPrice)
+    cl.logWriter(listedPrices)
     return listedPrices   
 
 
