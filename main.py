@@ -37,7 +37,7 @@ def getTomorrowsElectricityPrice(json, carunaNightTime=["22","23","0","1","2","3
                        
         else:
             totalPrice=float(price)/10+float(NGE_Margin)+float(carunaDayPrice)
-            hourlyPrice=f"{startTime} : {totalPrice}"
+        hourlyPrice=f"{startTime} : {totalPrice}"
         listedPrices.append(hourlyPrice)
     cl.logWriter(listedPrices)
     return listedPrices   
