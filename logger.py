@@ -2,7 +2,7 @@
 import datetime
 class chargerLogger: 
     def logWriter(text):
-        with open('chargerLog.txt', 'w') as f:
+        with open('chargerLog.txt', 'a') as f:
             timestamp=datetime.datetime.now()
             msg=f"{timestamp}::::: {text}"
             f.write(msg)

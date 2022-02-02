@@ -1,4 +1,5 @@
 from asyncio.log import logger
+from asyncio.windows_events import NULL
 import sys
 from urllib import response
 from matplotlib.font_manager import json_dump
@@ -9,32 +10,43 @@ from dateutil.relativedelta import relativedelta
 from dateutil.parser import parse as parse_dt
 from logger import chargerLogger as cl
 from jsonHandler import *
-carunaNightTime=["22","23","0","1","2","3","4","5","6"]
-NGE_Margin=0.16
-value = getJson()._fetch_json(35)
-x=json.loads(value)
+def main():
+
+    carunaNightTime=["22","23","0","1","2","3","4","5","6"]
+    NGE_Margin=0.16
+    value = getJson()._fetch_json(35)
+    x=json.loads(value)
+    hourlyPrices=getTomorrowsElectricityPrice(x)
+    print(hourlyPrices)
 
 #cl.logWriter(x["data"])
 #print(x["currency"])
-for y in range(24):
-    startTime=x["data"]["Rows"][y]["StartTime"]
-    # this should be used to verify that the time is rightprint(x["data"]["Rows"][0]["Columns"][0]["Name"])
-    price=x["data"]["Rows"][y]["Columns"][0]["Value"]
-
-    #convert price to float
-    price=price.replace(',', '.').replace(" ", "")
-    startHour=datetime.fromisoformat(startTime).hour
+def getTomorrowsElectricityPrice(json, carunaNightTime=["22","23","0","1","2","3","4","5","6"], NGE_Margin=0.16):
+    listedPrices=[]
     carunaNightPrice=2.74
     carunaDayPrice=4.45
-   
-    if str(startHour) in carunaNightTime:
-        totalPrice=float(price)/10+float(NGE_Margin)+float(carunaNightPrice)
-        print(f"{startTime} : {totalPrice}")
-    else:
-        totalPrice=float(price)/10+float(NGE_Margin)+float(carunaDayPrice)
-        print(f"{startTime} : {totalPrice}")
-        
+    for y in range(24):
+        startTime=json["data"]["Rows"][y]["StartTime"]
+        # this should be used to verify that the time is rightprint(x["data"]["Rows"][0]["Columns"][0]["Name"])
+        price=json["data"]["Rows"][y]["Columns"][0]["Value"]
+
+        #convert price to float
+        price=price.replace(',', '.').replace(" ", "")
+        startHour=datetime.fromisoformat(startTime).hour
+        hourlyPrice=NULL
+        if str(startHour) in carunaNightTime:
+            totalPrice=float(price)/10+float(NGE_Margin)+float(carunaNightPrice)
+            #print(f"{startTime} : {totalPrice}")
+
+            
+        else:
+            totalPrice=float(price)/10+float(NGE_Margin)+float(carunaDayPrice)
+            #print(f"{startTime} : {totalPrice}")
+        hourlyPrice=f"{startTime} : {totalPrice}"
+        listedPrices.append(hourlyPrice)
+    return listedPrices   
 
 
-#parsedValue = getJson()._parse_json(value, areas="FI")
-#print(parsedValue)
+
+if __name__ == "__main__":
+    main()
